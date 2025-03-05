@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow users to read and write their own data
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow users to read public profiles
+    match /users/{userId} {
+      allow read: if request.auth != null && (
+        resource.data.visibility == 'public' || 
+        request.auth.uid == userId
+      );
+    }
+    
+    // Allow users to read and write their own matches
+    match /matches/{matchId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Allow users to read and write their own chats
+    match /chats/{chatId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Allow users to read and write messages
+    match /messages/{messageId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Allow users to read and write call data
+    match /calls/{callId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Allow users to read and write call signaling data
+    match /callSignaling/{callId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Allow users to read and write call ICE candidates
+    match /callIceCandidates/{callId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Allow users to read and write history records
+    match /history/{recordId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+
